@@ -11,15 +11,19 @@ import (
 
 // Estrutura para armazenar a resposta da API
 type Address struct {
-	Cep         string `json:"cep"`
-	Logradouro  string `json:"logradouro"`
-	Complemento string `json:"complemento"`
-	Bairro      string `json:"bairro"`
-	Localidade  string `json:"localidade"`
-	Uf          string `json:"uf"`
-	Unidade     string `json:"unidade"`
-	Ibge        string `json:"ibge"`
-	Gia         string `json:"gia"`
+	Cep          string `json:"cep"`
+	Logradouro   string `json:"logradouro"`
+	Street       string `json:"street"`
+	Complemento  string `json:"complemento"`
+	Bairro       string `json:"bairro"`
+	Neighborhood string `json:"neighborhood"`
+	Localidade   string `json:"localidade"`
+	City         string `json:"city"`
+	Uf           string `json:"uf"`
+	State        string `json:"state"`
+	Unidade      string `json:"unidade"`
+	Ibge         string `json:"ibge"`
+	Gia          string `json:"gia"`
 }
 
 func main() {
@@ -73,6 +77,11 @@ func requestAPI(url, apiName string, wg *sync.WaitGroup, result chan<- string) {
 		return
 	}
 
-	result <- fmt.Sprintf("Resposta da %s: %s, %s, %s, %s, %s, %s", apiName,
-		address.Logradouro, address.Bairro, address.Localidade, address.Uf, address.Cep, address.Complemento)
+	if apiName == "BrasilAPI" {
+		result <- fmt.Sprintf("Resposta da %s\nRua:    %s\nBairro: %s\nCidade: %s - %s\nCEP:    %s\nComplemento: %s", apiName,
+			address.Street, address.Neighborhood, address.City, address.State, address.Cep, address.Complemento)
+	} else {
+		result <- fmt.Sprintf("Resposta da %s\nRua:    %s\nBairro: %s\nCidade: %s - %s\nCEP:    %s\nComplemento: %s", apiName,
+			address.Logradouro, address.Bairro, address.Localidade, address.Uf, address.Cep, address.Complemento)
+	}
 }
